@@ -1,0 +1,32 @@
+version: '2'
+services:
+  web:
+    image: odoo:15.0
+    container_name: web
+    restart: always
+    tty: true
+    command: -- --workers=3
+    depends_on:
+      - db
+    ports:
+      - "8069:8069"
+      - "8072:8072"
+    volumes:
+      - wodoo-web:/var/lib/odoo
+      - ./addons:/mnt/extra-addons
+
+  db:
+    image: postgres:13
+    container_name: db
+    environment:
+      - POSTGRES_PASSWORD=odoo
+      - POSTGRES_USER=odoo
+      - POSTGRES_DB=postgres
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - wodoo_db:/var/lib/postgresql/data/pgdata
+
+volumes:
+  wodoo-web:
+  wodoo_db:
+
